@@ -34,13 +34,6 @@
             </div>
 
             <div> 
-              <div class="result-item-heading"> New (last 24hrs) </div>
-              <div class="resultItem new"> 
-                <div class="resultItem-text"> {{ getNew | returnZero }} </div>
-              </div>
-            </div>
-
-            <div> 
               <div class="result-item-heading">Active</div>
               <div class="resultItem active"> 
                 <div class="resultItem-text"> {{ getActive | returnZero }} </div>
@@ -65,13 +58,6 @@
               <div class="result-item-heading">Total Deaths</div>
               <div class="resultItem deaths"> 
                 <div class="resultItem-text"> {{ getDeaths | returnZero }} </div>
-              </div>
-            </div>
-
-            <div> 
-              <div class="result-item-heading"> Deaths (last 24hrs) </div>
-              <div class="resultItem new-deaths"> 
-                <div class="resultItem-text"> {{ getNewDeaths | returnZero }} </div>
               </div>
             </div>
 
@@ -110,8 +96,6 @@ export default {
       recovered: '',
       deaths: '',
       active: '',
-      new: '', //new cases
-      newDeaths: '',
       day: '',
       countryWithoutSpace: '',
       error: false,
@@ -157,14 +141,6 @@ export default {
        } 
       },
 
-      getNewDeaths: {
-        get(){
-         return this.newDeaths
-       },
-       set(value){
-         this.newDeaths = value
-       } 
-      },
 
       getActive: {
         get(){
@@ -172,15 +148,6 @@ export default {
        },
        set(value){
          this.active = value
-       } 
-      },
-
-      getNew: {
-        get(){
-         return this.new
-       },
-       set(value){
-         this.new = value
        } 
       },
 
@@ -224,12 +191,10 @@ export default {
             this.loading = false
             this.showCountry = true
             this.total = res.data.response[0].cases.total
-            this.new = res.data.response[0].cases.new
             this.critical = res.data.response[0].cases.critical
             this.active = res.data.response[0].cases.active
             this.recovered = res.data.response[0].cases.recovered
             this.deaths = res.data.response[0].deaths.total
-            this.newDeaths = res.data.response[0].deaths.new
             this.getDay = res.data.response[0].day
             this.error = false
             this.success = true
@@ -243,28 +208,22 @@ export default {
           type:'bar',
           
           data: {
-            labels: [`Total (${this.country})`, `New (${this.country})`, `Active (${this.country})`, `Critical (${this.country})`, `Recovered (${this.country})`, `Deaths (${this.country})`, `New Deaths (${this.country})`],
+            labels: [`Total (${this.country})`, `Active (${this.country})`, `Critical (${this.country})`, `Recovered (${this.country})`, `Deaths (${this.country})`],
             datasets: [{
               label: 'Covid-19',
               data: [
                 
                 this.getTotal,
-                this.getNew,
                 this.getActive,
                 this.getCritical,
                 this.getRecovered,
-                this.getDeaths,
-                this.getNewDeaths      
+                this.getDeaths,     
               ],
               backgroundColor:[
-                '#ffdf5b',
-                '#ffac4d',
+                '#ffdf5b',                
                 '#73dfdf',
                 '#73c4ff',
-                '#73ffc4',    
-                '#ff5353',                    
-                '#ff8585'                    
-              ],
+                '#73ffc4',                    '#ff5353',                                         ],
               borderWidth: 0.2,
               
             }],
@@ -330,12 +289,10 @@ export default {
             console.log(res.data.response)
             this.loading = false
             this.total = res.data.response[0].cases.total
-            this.new = res.data.response[0].cases.new
             this.critical = res.data.response[0].cases.critical
             this.active = res.data.response[0].cases.active
             this.recovered = res.data.response[0].cases.recovered
             this.deaths = res.data.response[0].deaths.total
-            this.newDeaths = res.data.response[0].deaths.new
             this.getDay = res.data.response[0].day
             
             let chart = this.$refs.covid19.getContext('2d')
@@ -346,27 +303,24 @@ export default {
           type:'bar', 
           
           data: {
-            labels: [`Total (global)`, `New (global)`, `Active (global)`, `Critical (global)`, `Recovered (global)`, `Deaths (global)`, `New Deaths (global)`],
+            labels: [`Total (global)`, `Active (global)`, `Critical (global)`, `Recovered (global)`, `Deaths (global)`],
             datasets: [{
               label: 'Covid-19',
               
               data: [
                 this.getTotal,
-                this.getNew,
                 this.getActive,
                 this.getCritical,
                 this.getRecovered,
-                this.getDeaths,
-                this.getNewDeaths        
+                this.getDeaths,       
               ],
               backgroundColor:[
-                '#ffdf5b',
-                '#ffac4d',
+                '#ffdf5b',                
                 '#73dfdf',
                 '#73c4ff',
                 '#73ffc4',    
                 '#ff5353',                    
-                '#ff8585'                     
+                                     
               ],
               borderWidth: 0.2,
               
@@ -508,9 +462,7 @@ export default {
   .total {
     background-color: #ffdf5b;
   }
-  .new {
-    background-color: #ffac4d;
-  }
+  
   .active {
     background-color: #73dfdf;
   }
@@ -523,9 +475,7 @@ export default {
   .deaths {
     background-color: #ff5353;
   }
-  .new-deaths {
-    background-color: #ff8585;
-  }
+  
 
   .loading {
     text-align: center;
